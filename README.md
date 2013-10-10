@@ -36,7 +36,7 @@ dragloader样例需运行在 Smart Phone/Pad 上，扫描二维码：
 
 **dragUpHepler( String status )** 上拉区域html更新函数，需要根据不同状态返回html碎片，status取值范围：'default'、'prepare'、'load'
 
-*preventDragHelper : Boolean** 禁用dragHelper，由外部控制dragHelper
+**preventDragHelper : Boolean** 禁用dragHelper，由外部控制dragHelper
 
 **beforeDrag() : Boolean** drag开始回调函数，返回false时，本次drag动作将失效
 
