@@ -248,15 +248,10 @@
                         me._removeDragUpRegion();
                         me.touchCoords = null;
                         me.draggable = true;
-                    } else {
-                        if (orient == 'down') {
-                            me._removeDragUpRegion();
-                        } else {
-                            me._removeDragDownRegion();
-                        }
-                        if (options.autoReset) {
-                            me.reset();
-                        }
+                    } else if (orient == 'down') {
+                        me._removeDragUpRegion();
+                    } else if (orient == 'up') {
+                        me._removeDragDownRegion();
                     }
                 };
 
