@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<title>dragloader.js demo</title>
+
+<style type="text/css">
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+    }
+
+    p {
+        margin: 15px;
+        line-height: 24px;
+    }
+
+    .qr {
+        text-align: center;
+    }
+
+    .intro {
+        font-size: 18px;
+    }
+
+    .row {
+        color: #666;
+    }
+
+    .latest {
+        position: relative;
+        width: 100%;
+        background-color: #ffcccc;
+    }
+
+    .more {
+        position: relative;
+        width: 100%;
+        background-color: #a3cf62;
+    }
+
+    .latest div, .more div {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 80px;
+        text-align: center;
+        font-size: 18px;
+        line-height: 80px;
+        text-shadow: 1px 1px rgba(0, 0, 0, .3);
+    }
+
+    .more div {
+        top: 0;
+        bottom: auto;
+    }
+</style>
+<body>
+
+<p class="intro">dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull Request操作。</p>
+
+<p class="row">本样例运行在 Smart Phone/Pad 上，扫描二维码：</p>
+
+<div class="qr"><img src="qrcode.png" /></div>
+
+<p class="row">
+    向下滚动页面<br />
+    再向下滚动页面<br />
+    继续向下滚动页面<br />
+    再继续向下滚动页面<br />
+    一直继续向下滚动页面<br />
+    翻滚吧少年向下滚动页面<br />
+    滚动到页面的最底部<br />
+    <br />
+    <br />
+</p>
+
+<script type="text/javascript" src="../dragloader.js"></script>
+<script type="text/javascript">
+    var dragger = new DragLoader({
+        dragDownRegionCls: 'latest',
+        dragUpRegionCls: 'more',
+        dragDownHelper: function(status) {
+            if (status == 'default') {
+                return '<div>向下拉加载最新</div>';
+            } else if (status == 'prepare') {
+                return '<div>释放刷新</div>';
+            } else if (status == 'load') {
+                return '<div>加载中...</div>';
+            }
+        },
+        dragUpHelper: function(status) {
+            if (status == 'default') {
+                return '<div>向上拉加载更多</div>';
+            } else if (status == 'prepare') {
+                return '<div>释放刷新</div>';
+            } else if (status == 'load') {
+                return '<div>加载中...</div>';
+            }
+        },
+        onDragDownLoad: function() {
+            setTimeout(function() {
+                // 无论何时，必须由业务功能主动调用reset()接口，以还原状态
+                // 比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态
+                // 如果不重置，drag操作将失效
+                dragger.reset();
+            }, 2000);
+        },
+        onDragUpLoad: function() {
+            setTimeout(function() {
+                dragger.reset();
+            }, 2000);
+        }
+    });
+</script>
+
+</body>
+</html>
