@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Dragloader by maxzhang</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Dragloader</h1>
+        <h2>dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull Request操作。</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/maxzhang/dragloader/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/maxzhang/dragloader/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/maxzhang/dragloader" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="dragloaderjs" class="anchor" href="#dragloaderjs"><span class="octicon octicon-link"></span></a>dragloader.js</h1>
+
+<p>dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull Request操作。</p>
+
+<p>在移动设备上，一般会使用 drag down 手势实现加载最新</p>
+
+<p><img src="https://raw.github.com/maxzhang/maxzhang.github.com/master/articles/images/dragdown.gif" alt="dragdown"></p>
+
+<p>使用 drag up 手势实现加载更多</p>
+
+<p><img src="https://raw.github.com/maxzhang/maxzhang.github.com/master/articles/images/dragup.gif" alt="dragup"></p>
+
+<p>dragloader样例需运行在 Smart Phone/Pad 上，扫描二维码：</p>
+
+<p><img src="example/qrcode.png" alt="dragloader.js demo"></p>
+
+<p><strong>Note：目前dragloader.js在iOS下运行不是很稳定，上拉操作会有闪跳现象，Android下表现正常。</strong></p>
+
+<h2>
+<a name="options" class="anchor" href="#options"><span class="octicon octicon-link"></span></a>Options</h2>
+
+<p><strong>disableDragDown : Boolean</strong> true禁用下拉操作</p>
+
+<p><strong>disableDragUp : Boolean</strong> true禁用上拉操作</p>
+
+<p><strong>dragDownThreshold : Number</strong> 下拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80</p>
+
+<p><strong>dragUpThreshold : Number</strong> 上拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80</p>
+
+<p><strong>dragDownRegionCls : String</strong> 下拉区域样式</p>
+
+<p><strong>dragUpRegionCls : String</strong> 上拉区域样式</p>
+
+<p><strong>dragDownHelper( String status )</strong> 下拉区域html更新函数，需要根据不同状态返回html碎片，status取值范围：'default'、'prepare'、'load'</p>
+
+<p><strong>dragUpHepler( String status )</strong> 上拉区域html更新函数，需要根据不同状态返回html碎片，status取值范围：'default'、'prepare'、'load'</p>
+
+<p><strong>preventDragHelper : Boolean</strong> 禁用dragHelper，由外部控制dragHelper</p>
+
+<p><strong>beforeDrag() : Boolean</strong> drag开始回调函数，返回false时，本次drag动作将失效</p>
+
+<p><strong>onDragDownDefault()</strong> 当下拉区域drag状态更新为'default'时触发</p>
+
+<p><strong>onDragDownPrepare()</strong> 当下拉区域drag状态更新为'prepare'时触发</p>
+
+<p><strong>onDragDownLoad()</strong> 当下拉区域drag状态更新为'load'时触发</p>
+
+<p><strong>onDragUpDefault()</strong> 当上拉区域drag状态更新为'default'时触发</p>
+
+<p><strong>onDragUpPrepare()</strong> 当上拉区域drag状态更新为'prepare'时触发</p>
+
+<p><strong>onDragUpLoad()</strong> 当上拉区域drag状态更新为'load'时触发</p>
+
+<h2>
+<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h2>
+
+<p><strong>setDragDownDisabled(Boolean disabled)</strong> 设置下拉区域禁用状态</p>
+
+<p><strong>setDragUpDisabled(Boolean disabled)</strong> 设置上拉区域禁用状态</p>
+
+<p><strong>reset()</strong> 重置drag状态。无论何时，必须由业务功能主动调用reset()接口，以还原状态。比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态。如果不重置，drag操作将失效.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
