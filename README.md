@@ -20,43 +20,43 @@ dragloader样例需运行在 Smart Phone/Pad 上，扫描二维码：
 
 ## Options
 
-**disableDragDown : Boolean** true禁用下拉操作
+**Boolean : disableDragDown** true禁用下拉操作
 
-**disableDragUp : Boolean** true禁用上拉操作
+**Boolean : disableDragUp** true禁用上拉操作
 
-**dragDownThreshold : Number** 下拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80
+**Number : dragDownThreshold** 下拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80
 
-**dragUpThreshold : Number** 上拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80
+**String : dragUpThreshold** 上拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80
 
-**dragDownRegionCls : String** 下拉区域样式
+**String : dragDownRegionCls** 下拉区域样式
 
-**dragUpRegionCls : String** 上拉区域样式
+**String : dragUpRegionCls** 上拉区域样式
 
-**dragDownHelper( String status )** 下拉区域html更新函数，需要根据不同状态返回html碎片，status取值范围：'default'、'prepare'、'load'
+**Function : dragDownHelper( String status )** 下拉区域html更新函数，需要根据不同状态返回html碎片，status取值范围：'default'、'prepare'、'load'
 
-**dragUpHepler( String status )** 上拉区域html更新函数，需要根据不同状态返回html碎片，status取值范围：'default'、'prepare'、'load'
+**Function : dragUpHepler( String status )** 上拉区域html更新函数，需要根据不同状态返回html碎片，status取值范围：'default'、'prepare'、'load'
 
-**preventDragHelper : Boolean** 禁用dragHelper，由外部控制dragHelper
+**Boolean : preventDragHelper** 禁用dragHelper，由外部控制dragHelper
 
-**beforeDrag() : Boolean** drag开始回调函数，返回false时，本次drag动作将失效
+**Function : beforeDrag()** drag开始回调函数，返回false时，本次drag动作将失效
 
-**onDragDownDefault()** 当下拉区域drag状态更新为'default'时触发
+**Function : onDragDownDefault()** 当下拉区域drag状态更新为'default'时触发
 
-**onDragDownPrepare()** 当下拉区域drag状态更新为'prepare'时触发
+**Function : onDragDownPrepare()** 当下拉区域drag状态更新为'prepare'时触发
 
-**onDragDownLoad()** 当下拉区域drag状态更新为'load'时触发
+**Function : onDragDownLoad()** 当下拉区域drag状态更新为'load'时触发
 
-**onDragUpDefault()** 当上拉区域drag状态更新为'default'时触发
+**Function : onDragUpDefault()** 当上拉区域drag状态更新为'default'时触发
 
-**onDragUpPrepare()** 当上拉区域drag状态更新为'prepare'时触发
+**Function : onDragUpPrepare()** 当上拉区域drag状态更新为'prepare'时触发
 
-**onDragUpLoad()** 当上拉区域drag状态更新为'load'时触发
+**Function : onDragUpLoad()** 当上拉区域drag状态更新为'load'时触发
 
 
 ## Methods
 
-**setDragDownDisabled(Boolean disabled)** 设置下拉区域禁用状态
+**Function : setDragDownDisabled(Boolean disabled)** 设置下拉区域禁用状态
 
-**setDragUpDisabled(Boolean disabled)** 设置上拉区域禁用状态
+**Function : setDragUpDisabled(Boolean disabled)** 设置上拉区域禁用状态
 
-**reset()** 重置drag状态。无论何时，必须由业务功能主动调用reset()接口，以还原状态。比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态。如果不重置，drag操作将失效.
+**Function : reset()** 重置drag状态。无论何时，必须由业务功能主动调用reset()接口，以还原状态。比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态。如果不重置，drag操作将失效.

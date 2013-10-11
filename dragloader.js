@@ -92,7 +92,7 @@
             this.header = document.createElement('div');
             this.header.style.cssText = 'position:relative;top:0;left:0;margin:0;padding:0;overflow:hidden;width:100%;height:0px;';
             this.header.className = this.options.dragDownRegionCls || '';
-            this._processStatus('down', 0, null, true);
+            this.touchCoords.status = this._processStatus('down', 0, null, true);
             this.ct.insertBefore(this.header, this.ct.children[0]);
             return this.header;
         },
@@ -109,7 +109,7 @@
             this.footer = document.createElement('div');
             this.footer.style.cssText = 'position:relative;bottom:0;left:0;margin:0;padding:0;overflow:hidden;width:100%;height:0px;';
             this.footer.className = this.options.dragUpRegionCls || '';
-            this._processStatus('up', 0, null, true);
+            this.touchCoords.status = this._processStatus('up', 0, null, true);
             this.ct.appendChild(this.footer);
             return this.footer;
         },
@@ -172,8 +172,8 @@
             this.ct.removeEventListener(TOUCH_EVENTS.move, this._onTouchMove_, false);
             this.ct.removeEventListener(TOUCH_EVENTS.end, this._onTouchEnd_, false);
             var pageYOffset = window.pageYOffset;
-            if (this.draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this.options.beforeDrag.call(this) !== false
-                && (isIDevice ? (pageYOffset <= 0 || pageYOffset + window.innerHeight >= this.ct.scrollHeight)/* iOS下drag有闪跳现象，滑动到底部后，二次drag能改善这个问题 */ : true)) {
+            if (this.draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this.options.beforeDrag.call(this) !== false &&
+                (isIDevice ? (pageYOffset <= 0 || pageYOffset + window.innerHeight >= this.ct.scrollHeight) /* iOS下drag有闪跳现象，滑动到底部后，二次drag能改善这个问题 */ : true)) {
                 this.draggable = false;
                 this.ct.addEventListener(TOUCH_EVENTS.move, this._onTouchMove_, false);
                 this.ct.addEventListener(TOUCH_EVENTS.end, this._onTouchEnd_, false);
