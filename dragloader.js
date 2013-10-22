@@ -208,11 +208,10 @@
                 offsetY = offsetY > 0 ? offsetY : 0;
                 overY = offsetY - options.dragDownThreshold;
                 if (overY > 100) {
-                    offsetY = options.dragDownThreshold + 75 + (overY - 100) * .25;
+                    offsetY = options.dragDownThreshold + 75 + (overY - 100) * 0.2;
                 } else if (overY > 50) {
-                    offsetY = options.dragDownThreshold + 50 + (overY - 50) * .5;
+                    offsetY = options.dragDownThreshold + 50 + (overY - 50) * 0.5;
                 }
-                console.log(offsetY)
                 header.style.height = offsetY + 'px';
                 coords.status = this._processStatus('down', offsetY, coords.status, true);
             } else if (options.disableDragUp !== true && coords.dragDown !== true && (coords.dragUp || startY - stopY + startPageY + innerHeight > ctHeight)) {
@@ -228,9 +227,9 @@
                 offsetY = offsetY > 0 ? offsetY : 0;
                 overY = offsetY - options.dragUpThreshold;
                 if (overY > 100) {
-                    offsetY = options.dragUpThreshold + 75 + (overY - 100) * .2;
+                    offsetY = options.dragUpThreshold + 75 + (overY - 100) * 0.2;
                 } else if (overY > 50) {
-                    offsetY = options.dragUpThreshold + 50 + (overY - 50) * .5;
+                    offsetY = options.dragUpThreshold + 50 + (overY - 50) * 0.5;
                 }
                 ct.scrollTop = startPageY + offsetY;
                 footer.style.height = offsetY + 'px';
