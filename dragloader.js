@@ -1,17 +1,12 @@
 (function(window) {
     var document = window.document,
         navigator = window.navigator,
-        msPointerEnabled = navigator.msPointerEnabled,
         isIDevice = /(iPad|iPhone|iPod)\s+OS/i.test(navigator.userAgent),
+        msPointerEnabled = navigator.msPointerEnabled,
         TOUCH_EVENTS = {
             start: msPointerEnabled ? 'MSPointerDown' : 'touchstart',
             move: msPointerEnabled ? 'MSPointerMove' : 'touchmove',
             end: msPointerEnabled ? 'MSPointerUp' : 'touchend'
-        },
-        proxy = function(fn, scope) {
-            return function() {
-                return fn.apply(scope, arguments);
-            };
         },
         noop = function() {},
         dummyStyle = document.createElement('div').style,
@@ -74,10 +69,7 @@
 
         this.draggable = true;
 
-        this._onTouchStrat_ = proxy(this._onTouchStrat, this);
-        this._onTouchMove_ = proxy(this._onTouchMove, this);
-        this._onTouchEnd_ = proxy(this._onTouchEnd, this);
-        this.ct.addEventListener(TOUCH_EVENTS.start, this._onTouchStrat_, false);
+        this.ct.addEventListener(TOUCH_EVENTS.start, this, false);
     };
 
     DragLoader.prototype = {
@@ -169,14 +161,14 @@
         },
 
         _onTouchStrat: function(e) {
-            this.ct.removeEventListener(TOUCH_EVENTS.move, this._onTouchMove_, false);
-            this.ct.removeEventListener(TOUCH_EVENTS.end, this._onTouchEnd_, false);
+            this.ct.removeEventListener(TOUCH_EVENTS.move, this, false);
+            this.ct.removeEventListener(TOUCH_EVENTS.end, this, false);
             var pageYOffset = window.pageYOffset;
             if (this.draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this.options.beforeDrag.call(this) !== false &&
                 (isIDevice ? (pageYOffset <= 0 || pageYOffset + window.innerHeight >= this.ct.scrollHeight) /* iOS下drag有闪跳现象，滑动到底部后，二次drag能改善这个问题 */ : true)) {
                 this.draggable = false;
-                this.ct.addEventListener(TOUCH_EVENTS.move, this._onTouchMove_, false);
-                this.ct.addEventListener(TOUCH_EVENTS.end, this._onTouchEnd_, false);
+                this.ct.addEventListener(TOUCH_EVENTS.move, this, false);
+                this.ct.addEventListener(TOUCH_EVENTS.end, this, false);
                 this.touchCoords = {};
                 this.touchCoords.startY = msPointerEnabled ? e.screenY : e.touches[0].screenY;
                 this.touchCoords.startPageY = pageYOffset;
@@ -240,8 +232,8 @@
         },
 
         _onTouchEnd: function(e) {
-            this.ct.removeEventListener(TOUCH_EVENTS.move, this._onTouchMove_, false);
-            this.ct.removeEventListener(TOUCH_EVENTS.end, this._onTouchEnd_, false);
+            this.ct.removeEventListener(TOUCH_EVENTS.move, this, false);
+            this.ct.removeEventListener(TOUCH_EVENTS.end, this, false);
             this._translate();
         },
 
@@ -300,14 +292,28 @@
             this.options.disableDragUp = disabled;
         },
 
+        handleEvent: function(e) {
+            switch (e.type) {
+                case TOUCH_EVENTS.start:
+                    this._onTouchStrat(e);
+                    break;
+                case TOUCH_EVENTS.move:
+                    this._onTouchMove(e);
+                    break;
+                case TOUCH_EVENTS.end:
+                    this._onTouchEnd(e);
+                    break;
+            }
+        },
+
         destroy: function() {
             if (!this.destroyed) {
                 this.destroyed = true;
                 this._removeDragDownRegion();
                 this._removeDragUpRegion();
-                this.ct.removeEventListener(TOUCH_EVENTS.start, this._onTouchStrat_, false);
-                this.ct.removeEventListener(TOUCH_EVENTS.move, this._onTouchMove_, false);
-                this.ct.removeEventListener(TOUCH_EVENTS.end, this._onTouchEnd_, false);
+                this.ct.removeEventListener(TOUCH_EVENTS.start, this, false);
+                this.ct.removeEventListener(TOUCH_EVENTS.move, this, false);
+                this.ct.removeEventListener(TOUCH_EVENTS.end, this, false);
                 this.ct = null;
             }
         }
