@@ -1,7 +1,7 @@
 (function(window) {
     var document = window.document,
         navigator = window.navigator,
-        isIDevice = /(iPad|iPhone|iPod)\s+OS/i.test(navigator.userAgent),
+        isIDevice = /(iPad|iPhone|iPod)/i.test(navigator.userAgent),
         msPointerEnabled = navigator.msPointerEnabled,
         TOUCH_EVENTS = {
             start: msPointerEnabled ? 'MSPointerDown' : 'touchstart',
