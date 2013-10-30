@@ -17,7 +17,6 @@ dragloader样例需运行在 Smart Phone/Pad 上，扫描二维码：
 
 **Note：目前dragloader.js在iOS下运行不是很稳定，上拉操作会有闪跳现象，Android下表现正常。**
 
-
 ## Options
 
 **Boolean : disableDragDown** true禁用下拉操作
@@ -51,7 +50,6 @@ dragloader样例需运行在 Smart Phone/Pad 上，扫描二维码：
 **Function : onDragUpPrepare()** 当上拉区域drag状态更新为'prepare'时触发
 
 **Function : onDragUpLoad()** 当上拉区域drag状态更新为'load'时触发
-
 
 ## Methods
 
