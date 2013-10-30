@@ -9,41 +9,34 @@
 <title>dragloader.js demo</title>
 
 <style type="text/css">
-    html, body {
+    html, body, div, p {
         margin: 0;
         padding: 0;
         font-size: 16px;
     }
-
     p {
-        margin: 15px;
+        padding: 15px;
         line-height: 24px;
     }
-
     .qr {
         text-align: center;
     }
-
     .intro {
         font-size: 18px;
     }
-
     .row {
         color: #666;
     }
-
     .latest {
         position: relative;
         width: 100%;
         background-color: #ffcccc;
     }
-
     .more {
         position: relative;
         width: 100%;
         background-color: #a3cf62;
     }
-
     .latest div, .more div {
         position: absolute;
         left: 0;
@@ -55,7 +48,6 @@
         line-height: 80px;
         text-shadow: 1px 1px rgba(0, 0, 0, .3);
     }
-
     .more div {
         top: 0;
         bottom: auto;
@@ -103,20 +95,20 @@
             } else if (status == 'load') {
                 return '<div>加载中...</div>';
             }
-        },
-        onDragDownLoad: function() {
-            setTimeout(function() {
-                // 无论何时，必须由业务功能主动调用reset()接口，以还原状态
-                // 比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态
-                // 如果不重置，drag操作将失效
-                dragger.reset();
-            }, 2000);
-        },
-        onDragUpLoad: function() {
-            setTimeout(function() {
-                dragger.reset();
-            }, 2000);
         }
+    });
+    dragger.on('dragDownLoad', function() {
+        setTimeout(function() {
+            // 无论何时，必须由业务功能主动调用reset()接口，以还原状态
+            // 比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态
+            // 如果不重置，drag操作将失效
+            dragger.reset();
+        }, 2000);
+    });
+    dragger.on('dragUpLoad', function() {
+        setTimeout(function() {
+            dragger.reset();
+        }, 2000);
     });
 </script>
 

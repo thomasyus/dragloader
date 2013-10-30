@@ -8,7 +8,6 @@
             move: msPointerEnabled ? 'MSPointerMove' : 'touchmove',
             end: msPointerEnabled ? 'MSPointerUp' : 'touchend'
         },
-        noop = function() {},
         dummyStyle = document.createElement('div').style,
         vendor = (function () {
             var vendors = 't,webkitT,MozT,msT,OT'.split(','),
@@ -54,20 +53,14 @@
         };
 
     var DragLoader = function(options) {
-        this.ct = document.body;
         options = options || {};
         this.options = options;
+        this.ct = document.body;
         if (typeof options.dragDownThreshold === 'undefined') options.dragDownThreshold = 80;
         if (typeof options.dragUpThreshold === 'undefined') options.dragUpThreshold = 80;
-        this.options.beforeDrag = this.options.beforeDrag || noop;
-        this.options.onDragDownDefault = this.options.onDragDownDefault || noop;
-        this.options.onDragDownPrepare = this.options.onDragDownPrepare || noop;
-        this.options.onDragDownLoad = this.options.onDragDownLoad || noop;
-        this.options.onDragUpDefault = this.options.onDragUpDefault || noop;
-        this.options.onDragUpPrepare = this.options.onDragUpPrepare || noop;
-        this.options.onDragUpLoad = this.options.onDragUpLoad || noop;
 
-        this.draggable = true;
+        this._events = {};
+        this._draggable = true;
 
         this.ct.addEventListener(TOUCH_EVENTS.start, this, false);
     };
@@ -84,7 +77,7 @@
             this.header = document.createElement('div');
             this.header.style.cssText = 'position:relative;top:0;left:0;margin:0;padding:0;overflow:hidden;width:100%;height:0px;';
             this.header.className = this.options.dragDownRegionCls || '';
-            this.touchCoords.status = this._processStatus('down', 0, null, true);
+            this._touchCoords.status = this._processStatus('down', 0, null, true);
             this.ct.insertBefore(this.header, this.ct.children[0]);
             return this.header;
         },
@@ -101,7 +94,7 @@
             this.footer = document.createElement('div');
             this.footer.style.cssText = 'position:relative;bottom:0;left:0;margin:0;padding:0;overflow:hidden;width:100%;height:0px;';
             this.footer.className = this.options.dragUpRegionCls || '';
-            this.touchCoords.status = this._processStatus('up', 0, null, true);
+            this._touchCoords.status = this._processStatus('up', 0, null, true);
             this.ct.appendChild(this.footer);
             return this.footer;
         },
@@ -145,15 +138,15 @@
                 overflow = offsetY > options['drag' + upperStr + 'Threshold'];
                 if (!overflow && currentStatus != STATUS.default) {
                     this['_processDrag' + upperStr + 'Helper'](STATUS.default);
-                    options['onDrag' + upperStr + 'Default'].call(this);
+                    this._fireEvent('drag' + upperStr + 'Default');
                     nextStatus = STATUS.default;
                 } else if (moved && overflow && currentStatus != STATUS.prepare) {
                     this['_processDrag' + upperStr + 'Helper'](STATUS.prepare);
-                    options['onDrag' + upperStr + 'Prepare'].call(this);
+                    this._fireEvent('drag' + upperStr + 'Prepare');
                     nextStatus = STATUS.prepare;
                 } else if (!moved && overflow && currentStatus != STATUS.load) {
                     this['_processDrag' + upperStr + 'Helper'](STATUS.load);
-                    options['onDrag' + upperStr + 'Load'].call(this);
+                    this._fireEvent('drag' + upperStr + 'Load');
                     nextStatus = STATUS.load;
                 }
             }
@@ -164,14 +157,14 @@
             this.ct.removeEventListener(TOUCH_EVENTS.move, this, false);
             this.ct.removeEventListener(TOUCH_EVENTS.end, this, false);
             var pageYOffset = window.pageYOffset;
-            if (this.draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this.options.beforeDrag.call(this) !== false &&
+            if (this._draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this._fireEvent('beforeDrag') !== false &&
                 (isIDevice ? (pageYOffset <= 0 || pageYOffset + window.innerHeight >= this.ct.scrollHeight) /* iOS下drag有闪跳现象，滑动到底部后，二次drag能改善这个问题 */ : true)) {
-                this.draggable = false;
+                this._draggable = false;
                 this.ct.addEventListener(TOUCH_EVENTS.move, this, false);
                 this.ct.addEventListener(TOUCH_EVENTS.end, this, false);
-                this.touchCoords = {};
-                this.touchCoords.startY = msPointerEnabled ? e.screenY : e.touches[0].screenY;
-                this.touchCoords.startPageY = pageYOffset;
+                this._touchCoords = {};
+                this._touchCoords.startY = msPointerEnabled ? e.screenY : e.touches[0].screenY;
+                this._touchCoords.startPageY = pageYOffset;
             }
         },
 
@@ -180,7 +173,7 @@
                 options = this.options,
                 innerHeight = window.innerHeight,
                 ctHeight = ct.scrollHeight,
-                coords = this.touchCoords,
+                coords = this._touchCoords,
                 startPageY = coords.startPageY,
                 blockY = coords.blockY,
                 startY = coords.startY,
@@ -240,7 +233,7 @@
         _translate: function() {
             var me = this,
                 options = me.options,
-                coords = me.touchCoords, orient,
+                coords = me._touchCoords, orient,
                 target, targetHeight,
                 adjustHeight,
                 maxDuration = 200, duration,
@@ -250,8 +243,8 @@
                     if (!orient || coords.status !== me.STATUS.load) {
                         me._removeDragDownRegion();
                         me._removeDragUpRegion();
-                        me.touchCoords = null;
-                        me.draggable = true;
+                        me._touchCoords = null;
+                        me._draggable = true;
                     } else if (orient == 'down') {
                         me._removeDragUpRegion();
                     } else if (orient == 'up') {
@@ -282,6 +275,34 @@
 
         reset: function() {
             this._translate();
+        },
+
+        on: function(type, fn) {
+            if (!this._events[type]) {
+                this._events[type] = [];
+            }
+            this._events[type].push(fn);
+        },
+
+        off: function(type, fn) {
+            if (this._events[type]) {
+                this._events[type].every(function(cb, i) {
+                    if (cb === fn) {
+                        this._events[type].splice(i, 1);
+                        return false;
+                    }
+                });
+            }
+        },
+
+        _fireEvent: function(type, args) {
+            var ret;
+            if (this._events[type]) {
+                this._events[type].forEach(function(fn) {
+                    ret = fn.apply(this, args || []);
+                });
+            }
+            return ret;
         },
 
         setDragDownDisabled: function(disabled) {
