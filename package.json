@@ -1,7 +1,7 @@
 {
     "name": "dragloader",
     "description": "dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull Request操作。",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "homepage": "https://github.com/maxzhang/dragloader",
     "author": "Max Zhang <zhangdaiping@gmail.com>",
     "respository": {
