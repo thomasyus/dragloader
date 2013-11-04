@@ -14,6 +14,18 @@
         padding: 0;
         font-size: 16px;
     }
+
+    .wrap {
+        height: 100%;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    .android .wrap {
+        height: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: none;
+    }
+
     p {
         padding: 15px;
         line-height: 24px;
@@ -55,61 +67,80 @@
 </style>
 <body>
 
-<p class="intro">dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull Request操作。</p>
+<div class="wrap">
+    <p class="intro">dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull Request操作。</p>
 
-<p class="row">本样例运行在 Smart Phone/Pad 上，扫描二维码：</p>
+    <p class="row">本样例运行在 Smart Phone/Pad 上，扫描二维码：</p>
 
-<div class="qr"><img src="qrcode.png" /></div>
+    <div class="qr"><img src="qrcode.png" /></div>
 
-<p class="row">
-    向下滚动页面<br />
-    再向下滚动页面<br />
-    继续向下滚动页面<br />
-    再继续向下滚动页面<br />
-    一直继续向下滚动页面<br />
-    翻滚吧少年向下滚动页面<br />
-    滚动到页面的最底部<br />
-    <br />
-    <br />
-</p>
+    <p class="row">
+        向下滚动页面<br />
+        再向下滚动页面<br />
+        继续向下滚动页面<br />
+        再继续向下滚动页面<br />
+        一直继续向下滚动页面<br />
+        翻滚吧少年向下滚动页面<br />
+        滚动到页面的最底部<br />
+        滚动到页面的最底部<br />
+        滚动到页面的最底部<br />
+        滚动到页面的最底部<br />
+    </p>
+</div>
 
+<script type="text/javascript" src="vendor.js"></script>
+<script type="text/javascript" src="adapter.js"></script>
+<script type="text/javascript" src="supporter.js"></script>
+<script type="text/javascript" src="resizer.js"></script>
 <script type="text/javascript" src="../dragloader.js"></script>
 <script type="text/javascript">
-    var dragger = new DragLoader({
-        dragDownRegionCls: 'latest',
-        dragUpRegionCls: 'more',
-        dragDownHelper: function(status) {
-            if (status == 'default') {
-                return '<div>向下拉加载最新</div>';
-            } else if (status == 'prepare') {
-                return '<div>释放刷新</div>';
-            } else if (status == 'load') {
-                return '<div>加载中...</div>';
-            }
-        },
-        dragUpHelper: function(status) {
-            if (status == 'default') {
-                return '<div>向上拉加载更多</div>';
-            } else if (status == 'prepare') {
-                return '<div>释放刷新</div>';
-            } else if (status == 'load') {
-                return '<div>加载中...</div>';
-            }
+    (function() {
+        var body = document.body, wrap = document.getElementsByClassName('wrap')[0];
+        if (supporter.os.android) {
+            body.className += ' android';
+        } else {
+            resizer.on(function(w, h) {
+                wrap.style.height = h + 'px';
+            });
         }
-    });
-    dragger.on('dragDownLoad', function() {
-        setTimeout(function() {
-            // 无论何时，必须由业务功能主动调用reset()接口，以还原状态
-            // 比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态
-            // 如果不重置，drag操作将失效
-            dragger.reset();
-        }, 2000);
-    });
-    dragger.on('dragUpLoad', function() {
-        setTimeout(function() {
-            dragger.reset();
-        }, 2000);
-    });
+
+        var dragger = new DragLoader({
+            ct: supporter.os.android ? body : wrap,
+            dragDownRegionCls: 'latest',
+            dragUpRegionCls: 'more',
+            dragDownHelper: function(status) {
+                if (status == 'default') {
+                    return '<div>向下拉加载最新</div>';
+                } else if (status == 'prepare') {
+                    return '<div>释放刷新</div>';
+                } else if (status == 'load') {
+                    return '<div>加载中...</div>';
+                }
+            },
+            dragUpHelper: function(status) {
+                if (status == 'default') {
+                    return '<div>向上拉加载更多</div>';
+                } else if (status == 'prepare') {
+                    return '<div>释放刷新</div>';
+                } else if (status == 'load') {
+                    return '<div>加载中...</div>';
+                }
+            }
+        });
+        dragger.on('dragDownLoad', function() {
+            setTimeout(function() {
+                // 无论何时，必须由业务功能主动调用reset()接口，以还原状态
+                // 比如在onDragDownLoad()回调中使用ajax加载数据时，在ajax的回调函数中应当调用reset()重置drag状态
+                // 如果不重置，drag操作将失效
+                dragger.reset();
+            }, 2000);
+        });
+        dragger.on('dragUpLoad', function() {
+            setTimeout(function() {
+                dragger.reset();
+            }, 2000);
+        });
+    })();
 </script>
 
 </body>

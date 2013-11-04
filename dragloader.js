@@ -1,7 +1,6 @@
 (function(window) {
     var document = window.document,
         navigator = window.navigator,
-        isIDevice = /(iPad|iPhone|iPod)/i.test(navigator.userAgent),
         msPointerEnabled = navigator.msPointerEnabled,
         TOUCH_EVENTS = {
             start: msPointerEnabled ? 'MSPointerDown' : 'touchstart',
@@ -55,7 +54,7 @@
     var DragLoader = function(options) {
         options = options || {};
         this.options = options;
-        this.ct = document.body;
+        this.ct = options.ct ? (typeof options.ct === 'string' ? document.querySelector(options.ct) : options.ct) : document.body;
         if (typeof options.dragDownThreshold === 'undefined') options.dragDownThreshold = 80;
         if (typeof options.dragUpThreshold === 'undefined') options.dragUpThreshold = 80;
 
@@ -156,15 +155,15 @@
         _onTouchStrat: function(e) {
             this.ct.removeEventListener(TOUCH_EVENTS.move, this, false);
             this.ct.removeEventListener(TOUCH_EVENTS.end, this, false);
-            var pageYOffset = window.pageYOffset;
-            if (this._draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this._fireEvent('beforeDrag') !== false &&
-                (isIDevice ? (pageYOffset <= 0 || pageYOffset + window.innerHeight >= this.ct.scrollHeight) /* iOS下drag有闪跳现象，滑动到底部后，二次drag能改善这个问题 */ : true)) {
+            var body = document.body,
+                startScrollY = this.ct === body ? window.pageYOffset || window.scrollY || body.scrollTop || document.documentElement.scrollTop : this.ct.scrollTop;
+            if (this._draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this._fireEvent('beforeDrag') !== false) {
                 this._draggable = false;
                 this.ct.addEventListener(TOUCH_EVENTS.move, this, false);
                 this.ct.addEventListener(TOUCH_EVENTS.end, this, false);
                 this._touchCoords = {};
                 this._touchCoords.startY = msPointerEnabled ? e.screenY : e.touches[0].screenY;
-                this._touchCoords.startPageY = pageYOffset;
+                this._touchCoords.startScrollY = startScrollY;
             }
         },
 
@@ -174,13 +173,20 @@
                 innerHeight = window.innerHeight,
                 ctHeight = ct.scrollHeight,
                 coords = this._touchCoords,
-                startPageY = coords.startPageY,
+                startScrollY = coords.startScrollY,
                 blockY = coords.blockY,
                 startY = coords.startY,
                 stopY = msPointerEnabled ? e.screenY : e.touches[0].screenY,
                 offsetY, overY;
 
-            if (options.disableDragDown !== true && coords.dragUp !== true && (coords.dragDown || startY - stopY + startPageY < 0)) {
+            if (typeof coords.canDragDown === 'undefined') {
+                coords.canDragDown = options.disableDragDown !== true && startY < stopY && startScrollY <= 0;
+            }
+            if (typeof coords.canDragUp === 'undefined') {
+                coords.canDragUp = options.disableDragUp !== true && startY > stopY && startScrollY + innerHeight >= ctHeight;
+            }
+
+            if (coords.canDragDown && coords.dragUp !== true && (coords.dragDown || startY - stopY + startScrollY < 0)) {
                 e.preventDefault();
                 coords.dragDown = true;
                 if (!header) {
@@ -193,13 +199,13 @@
                 offsetY = offsetY > 0 ? offsetY : 0;
                 overY = offsetY - options.dragDownThreshold;
                 if (overY > 100) {
-                    offsetY = options.dragDownThreshold + 75 + (overY - 100) * 0.2;
+                    offsetY = options.dragDownThreshold + 75 + (overY - 100) * 0.25;
                 } else if (overY > 50) {
                     offsetY = options.dragDownThreshold + 50 + (overY - 50) * 0.5;
                 }
                 header.style.height = offsetY + 'px';
                 coords.status = this._processStatus('down', offsetY, coords.status, true);
-            } else if (options.disableDragUp !== true && coords.dragDown !== true && (coords.dragUp || startY - stopY + startPageY + innerHeight > ctHeight)) {
+            } else if (coords.canDragUp && coords.dragDown !== true && (coords.dragUp || startY - stopY + startScrollY + innerHeight > ctHeight)) {
                 e.preventDefault();
                 coords.dragUp = true;
                 if (!footer) {
@@ -216,7 +222,7 @@
                 } else if (overY > 50) {
                     offsetY = options.dragUpThreshold + 50 + (overY - 50) * 0.5;
                 }
-                ct.scrollTop = startPageY + offsetY;
+                ct.scrollTop = startScrollY + offsetY;
                 footer.style.height = offsetY + 'px';
                 coords.status = this._processStatus('up', offsetY, coords.status, true);
             } else {
