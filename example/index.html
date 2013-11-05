@@ -95,8 +95,9 @@
 <script type="text/javascript" src="../dragloader.js"></script>
 <script type="text/javascript">
     (function() {
-        var body = document.body, wrap = document.getElementsByClassName('wrap')[0];
-        if (supporter.os.android) {
+        var isNotAndroid4 = supporter.os.android && !supporter.os.android4,
+            body = document.body, wrap = document.getElementsByClassName('wrap')[0];
+        if (isNotAndroid4) {
             body.className += ' android';
         } else {
             resizer.on(function(w, h) {
@@ -105,7 +106,7 @@
         }
 
         var dragger = new DragLoader({
-            ct: supporter.os.android ? body : wrap,
+            ct: isNotAndroid4 ? body : wrap,
             dragDownRegionCls: 'latest',
             dragUpRegionCls: 'more',
             dragDownHelper: function(status) {
