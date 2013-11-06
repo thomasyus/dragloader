@@ -51,10 +51,10 @@
             target.transitionTimer = setTimeout(handler, duration + 100);
         };
 
-    var DragLoader = function(options) {
+    var DragLoader = function(el, options) {
         options = options || {};
         this.options = options;
-        this.ct = options.ct ? (typeof options.ct === 'string' ? document.querySelector(options.ct) : options.ct) : document.body;
+        this.ct = options.ct ? (typeof el === 'string' ? document.querySelector(el) : el) : document.body;
         if (typeof options.threshold === 'undefined') options.threshold = 80;
         if (typeof options.dragDownThreshold === 'undefined') options.dragDownThreshold = options.threshold;
         if (typeof options.dragUpThreshold === 'undefined') options.dragUpThreshold = options.threshold;

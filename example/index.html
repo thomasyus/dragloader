@@ -14,18 +14,15 @@
         padding: 0;
         font-size: 16px;
     }
-
     .wrap {
-        height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
     }
-    .android .wrap {
-        height: auto;
-        overflow-y: visible;
-        -webkit-overflow-scrolling: none;
-    }
-
     p {
         padding: 15px;
         line-height: 24px;
@@ -88,25 +85,10 @@
     </p>
 </div>
 
-<script type="text/javascript" src="vendor.js"></script>
-<script type="text/javascript" src="adapter.js"></script>
-<script type="text/javascript" src="supporter.js"></script>
-<script type="text/javascript" src="resizer.js"></script>
 <script type="text/javascript" src="../dragloader.js"></script>
 <script type="text/javascript">
     (function() {
-        var isNotAndroid4 = supporter.os.android && !supporter.os.android4,
-            body = document.body, wrap = document.getElementsByClassName('wrap')[0];
-        if (isNotAndroid4) {
-            body.className += ' android';
-        } else {
-            resizer.on(function(w, h) {
-                wrap.style.height = h + 'px';
-            });
-        }
-
-        var dragger = new DragLoader({
-            ct: isNotAndroid4 ? body : wrap,
+        var dragger = new DragLoader(document.getElementsByClassName('wrap')[0], {
             dragDownRegionCls: 'latest',
             dragUpRegionCls: 'more',
             dragDownHelper: function(status) {
