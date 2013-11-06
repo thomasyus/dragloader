@@ -1,21 +1,25 @@
 dragloader.js
 ==========
 
-dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull Request操作。
+dragloader.js是一个面向移动Web开发的JavaScript库，帮助开发者在使用页面原生滚动时，模拟上/下拉手势，实现Pull to Request操作。
 
-在移动设备上，一般会使用 drag down 手势实现加载最新
+在移动设备上，一般会使用 pull down 手势实现加载最新
 
-![dragdown](https://raw.github.com/maxzhang/maxzhang.github.com/master/articles/images/dragdown.gif)
+![pulldown](https://raw.github.com/maxzhang/maxzhang.github.com/master/articles/images/dragdown.gif)
 
-使用 drag up 手势实现加载更多
+使用 pull up 手势实现加载更多
 
-![dragup](https://raw.github.com/maxzhang/maxzhang.github.com/master/articles/images/dragup.gif)
+![pullup](https://raw.github.com/maxzhang/maxzhang.github.com/master/articles/images/dragup.gif)
 
 dragloader样例需运行在 Smart Phone/Pad 上，扫描二维码：
 
 ![dragloader.js demo](example/qrcode.png)
 
-**Note：目前dragloader.js在iOS下运行不是很稳定，上拉操作会有闪跳现象，Android下表现正常。**
+另一个样例，IScroll与dragloader.js的实现Pull to Request对比:
+
+使用IScroll实现： http://jsbin.com/AtIGeKe/latest
+
+使用dragloader.js的实现： http://jsbin.com/UGajALA/latest
 
 ## Options
 
