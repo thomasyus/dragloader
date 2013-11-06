@@ -55,8 +55,9 @@
         options = options || {};
         this.options = options;
         this.ct = options.ct ? (typeof options.ct === 'string' ? document.querySelector(options.ct) : options.ct) : document.body;
-        if (typeof options.dragDownThreshold === 'undefined') options.dragDownThreshold = this.threshold;
-        if (typeof options.dragUpThreshold === 'undefined') options.dragUpThreshold = this.threshold;
+        if (typeof options.threshold === 'undefined') options.threshold = 80;
+        if (typeof options.dragDownThreshold === 'undefined') options.dragDownThreshold = options.threshold;
+        if (typeof options.dragUpThreshold === 'undefined') options.dragUpThreshold = options.threshold;
 
         this._events = {};
         this._draggable = true;
@@ -70,8 +71,6 @@
             prepare: 'prepare',
             load: 'load'
         },
-
-        threshold: 80,
 
         _createDragDownRegion: function() {
             this._removeDragDownRegion();
