@@ -137,15 +137,15 @@
                 upperStr = orient.charAt(0).toUpperCase() + orient.substr(1);
                 overflow = offsetY > options['drag' + upperStr + 'Threshold'];
                 if (!overflow && currentStatus != STATUS.default) {
-                    this['_processDrag' + upperStr + 'Helper'](STATUS.default);
+                    this['_processDrag' + upperStr + 'Helper'].call(this, STATUS.default);
                     this._fireEvent('drag' + upperStr + 'Default');
                     nextStatus = STATUS.default;
                 } else if (moved && overflow && currentStatus != STATUS.prepare) {
-                    this['_processDrag' + upperStr + 'Helper'](STATUS.prepare);
+                    this['_processDrag' + upperStr + 'Helper'].call(this, STATUS.prepare);
                     this._fireEvent('drag' + upperStr + 'Prepare');
                     nextStatus = STATUS.prepare;
                 } else if (!moved && overflow && currentStatus != STATUS.load) {
-                    this['_processDrag' + upperStr + 'Helper'](STATUS.load);
+                    this['_processDrag' + upperStr + 'Helper'].call(this, STATUS.load);
                     this._fireEvent('drag' + upperStr + 'Load');
                     nextStatus = STATUS.load;
                 }
@@ -303,10 +303,10 @@
         },
 
         _fireEvent: function(type, args) {
-            var ret;
-            if (this._events[type]) {
-                this._events[type].forEach(function(fn) {
-                    ret = fn.apply(this, args || []);
+            var me = this, ret;
+            if (me._events[type]) {
+                me._events[type].forEach(function(fn) {
+                    ret = fn.apply(me, args || []);
                 });
             }
             return ret;
