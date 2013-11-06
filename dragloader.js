@@ -52,9 +52,9 @@
         };
 
     var DragLoader = function(el, options) {
+        this.ct = el ? (typeof el === 'string' ? document.querySelector(el) : el) : document.body;
         options = options || {};
         this.options = options;
-        this.ct = options.ct ? (typeof el === 'string' ? document.querySelector(el) : el) : document.body;
         if (typeof options.threshold === 'undefined') options.threshold = 80;
         if (typeof options.dragDownThreshold === 'undefined') options.dragDownThreshold = options.threshold;
         if (typeof options.dragUpThreshold === 'undefined') options.dragUpThreshold = options.threshold;
