@@ -23,9 +23,11 @@ dragloader样例需运行在 Smart Phone/Pad 上，扫描二维码：
 
 **Boolean : disableDragUp** true禁用上拉操作
 
-**Number : dragDownThreshold** 下拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80
+**Number : threshold** 默认上/下拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80
 
-**String : dragUpThreshold** 上拉区域临界值，超过这个值状态将由“default”变为“perpare”，默认80
+**Number : dragDownThreshold** 下拉区域临界值，超过这个值状态将由“default”变为“perpare”
+
+**String : dragUpThreshold** 上拉区域临界值，超过这个值状态将由“default”变为“perpare”
 
 **String : dragDownRegionCls** 下拉区域样式
 
