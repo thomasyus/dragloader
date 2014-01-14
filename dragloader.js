@@ -157,7 +157,7 @@
             this.ct.removeEventListener(TOUCH_EVENTS.move, this, false);
             this.ct.removeEventListener(TOUCH_EVENTS.end, this, false);
             var body = document.body,
-                startScrollY = this.ct === body ? window.pageYOffset || window.scrollY || body.scrollTop || document.documentElement.scrollTop : this.ct.scrollTop;
+                startScrollY = this.ct === body ? (window.pageYOffset || window.scrollY || document.documentElement.scrollTop) : this.ct.scrollTop;
             if (this._draggable && (this.options.disableDragDown !== true || this.options.disableDragUp !== true) && this._fireEvent('beforeDrag') !== false) {
                 this._draggable = false;
                 this.ct.addEventListener(TOUCH_EVENTS.move, this, false);
